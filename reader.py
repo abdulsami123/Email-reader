@@ -5,7 +5,11 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import pyttsx3
+import util
 
+
+    
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
@@ -52,6 +56,7 @@ def main():
                     message_text = part["body"]["data"]
                     message_text = base64.urlsafe_b64decode(message_text).decode("utf-8")
                     print(message_text)
+                    util.read_out_loud(message_text)
                     break  # Stop after printing the first "text/plain" part
         else:
             print("No message parts found.")
