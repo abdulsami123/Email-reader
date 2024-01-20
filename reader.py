@@ -39,7 +39,7 @@ def main():
   try:
     # Call the Gmail API to retrieve the latest email from a specific sender
     service = build("gmail", "v1", credentials=creds)
-    response = service.users().messages().list(userId="me", q="from:hello@nicksingh.com", maxResults=1).execute()
+    response = service.users().messages().list(userId="me", q="dan@tldrnewsletter.com", maxResults=1).execute()
     messages = []
     if "messages" in response:
         messages.extend(response["messages"])
@@ -65,5 +65,9 @@ def main():
     # TODO(developer) - Handle errors from gmail API.
     print(f"An error occurred: {error}")
 
+
+#this is the main-guard practice which ensures the fucntion 
+# only runs if the script
+#is called directly (not imported as a module)
 if __name__ == "__main__":
   main()
