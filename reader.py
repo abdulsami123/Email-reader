@@ -6,8 +6,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pyttsx3
-import util
-import vertex
+import base64
+from bs4 import BeautifulSoup
 
 
     
@@ -37,38 +37,48 @@ def main():
     with open("token.json", "w") as token:
       token.write(creds.to_json())
 
+  
   try:
-    # Call the Gmail API to retrieve the latest email from a specific sender
     service = build("gmail", "v1", credentials=creds)
-    response = service.users().messages().list(userId="me", q="dan@tldrnewsletter.com", maxResults=1).execute()
-    messages = []
+    response = service.users().messages().list(userId="me", q="TLDR <dan@tldrnewsletter.com> ").execute()
+    messages = response.get("messages", [])
     if "messages" in response:
-        messages.extend(response["messages"])
-
+      messages.extend(response["messages"])
     if not messages:
         print("No messages found.")
     else:
         latest_message_id = messages[0]["id"]
-        latest_message = service.users().messages().get(userId="me", id=latest_message_id, format="full").execute()
-        message_payload = latest_message["payload"]
-        if "parts" in message_payload:
-            for part in message_payload["parts"]:
-                if part["mimeType"] == "text/plain":
-                    message_text = part["body"]["data"]
-                    message_text = base64.urlsafe_b64decode(message_text).decode("utf-8")
-                    print(message_text)
-                    util.read_out_loud(message_text)
-                    break  # Stop after printing the first "text/plain" part
+        latest_message = service.users().messages().get(userId="me", id=latest_message_id, format="raw").execute()
+        message_text = base64.urlsafe_b64decode(latest_message["raw"]).decode("utf-8")
+
+        # Parse the message using BeautifulSoup
+        soup = BeautifulSoup(message_text, "html.parser")
+
+        # Find the body element
+        body_element = soup.find("body")
+
+        if body_element:
+          
+        # Extract text from the body element
+          body_text = body_element.text
+          return body_text
+          
         else:
-            print("No message parts found.")
+          print("Body element not found.")
 
   except HttpError as error:
-    # TODO(developer) - Handle errors from gmail API.
-    print(f"An error occurred: {error}")
+      print(f"An error occurred: {error}")
+      if error.resp.status == 401:
+          print("Unauthorized. Check your credentials.")
+      elif error.resp.status == 403:
+          print("Forbidden. Check your permissions and scopes.")
+      elif error.resp.status == 404:
+          print("Not found. Check your query and user ID.")
+      else:
+          print(f"Unexpected error: {error.resp.status}")
 
+  
+  
 
-#this is the main-guard practice which ensures the fucntion 
-# only runs if the script
-#is called directly (not imported as a module)
 if __name__ == "__main__":
   main()

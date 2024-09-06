@@ -1,0 +1,31 @@
+import json
+import os
+from pathlib import Path
+import google.generativeai as genai
+import reader
+import util
+
+def load_api_key():
+    try:
+        with open(Path(__file__).parent / "gemini-api-key.json") as f:
+            os.environ["api-key"] = json.load(f)["api-key"]
+    except (FileNotFoundError, KeyError, json.JSONDecodeError) as e:
+        print(f"Error loading API key: {e}")
+
+load_api_key()
+
+
+genai.configure(api_key=os.environ["api-key"])
+
+model = genai.GenerativeModel("gemini-1.5-flash")
+input = """In this conversation, Altman seems to imply that the company is prepared to launch a major AI model this year, but whether it will be called GPT-5 or be considered a major upgrade to GPT-4 Turbo (or perhaps an incremental update like GPT-4.5) is up in the air. 
+Like its predecessor, GPT-5 (or whatever it will be called) is expected to be a multimodal large language model (LLM) that can accept text or encoded visual input (called a prompt). And like GPT-4, GPT-5 will be a next-token prediction model, which means that it will output its best estimate of the most likely next token (a fragment of a word) in a sequence, which allows for tasks such as completing a sentence or writing code. When configured in a specific way, GPT models can power conversational chatbot applications like ChatGPT.
+OpenAI launched GPT-4 in March 2023 as an upgrade to its most major predecessor, GPT-3, which emerged in 2020 (with GPT-3.5 arriving in late 2022). Last November, OpenAI released GPT-4 Turbo, which lowered inference (running) costs of OpenAIs best AI model dramatically but has been plagued with accusations of laziness where the model sometimes refuses to answer prompts or complete coding projects as requested. OpenAI has attempted to fix the laziness issue several times.
+LLMs like those developed by OpenAI are trained on massive datasets scraped from the Internet and licensed from media companies, enabling them to respond to user prompts in a human-like manner. However, the quality of the information provided by the model can vary depending on the training data used, and also based on the models tendency to confabulate information. If GPT-5 can improve generalization (its ability to perform novel tasks) while also reducing what are commonly called hallucinations in the industry, it will likely represent a notable advancement for the firm.
+According to the report, OpenAI is still training GPT-5, and after that is complete, the model will undergo internal safety testing and further red teaming to identify and address any issues before its public release. The release date could be delayed depending on the duration of the safety testing process."""
+
+text = reader.main()
+
+response = model.generate_content(f"summarise the following text {text}")
+util.read_out_loud(response.text)
+print(response.text)

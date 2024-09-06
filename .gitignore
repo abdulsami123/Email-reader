@@ -1,0 +1,5 @@
+#mostly JSON files containing API keys
+settings.json
+credentials.json
+gemini-api-key.json
+token.json
