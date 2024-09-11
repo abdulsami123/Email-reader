@@ -3,3 +3,5 @@ settings.json
 credentials.json
 gemini-api-key.json
 token.json
+
+backend/backend/settings.py
