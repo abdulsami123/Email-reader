@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pyttsx3
 import base64
-from bs4 import BeautifulSoup
+import parser
 
 
     
@@ -40,31 +40,36 @@ def main():
   
   try:
     service = build("gmail", "v1", credentials=creds)
-    response = service.users().messages().list(userId="me", q="TLDR <dan@tldrnewsletter.com> ").execute()
+    response = service.users().messages().list(userId="me", q="TLDR <dan@tldrnewsletter.com>").execute()
     messages = response.get("messages", [])
-    if "messages" in response:
-      messages.extend(response["messages"])
     if not messages:
         print("No messages found.")
     else:
         latest_message_id = messages[0]["id"]
-        latest_message = service.users().messages().get(userId="me", id=latest_message_id, format="raw").execute()
-        message_text = base64.urlsafe_b64decode(latest_message["raw"]).decode("utf-8")
+        latest_message = service.users().messages().get(userId="me", id=latest_message_id, format="full").execute()
+        
+        # Get the HTML part of the email
+        html_part = None
+        if 'payload' in latest_message and 'parts' in latest_message['payload']:
+            for part in latest_message['payload']['parts']:
+                if part['mimeType'] == 'text/html':
+                    html_part = part
+                    break
 
-        # Parse the message using BeautifulSoup
-        soup = BeautifulSoup(message_text, "html.parser")
-
-        # Find the body element
-        body_element = soup.find("body")
-
-        if body_element:
-          
-        # Extract text from the body element
-          body_text = body_element.text
-          return body_text
-          
+        if html_part:
+            # Decode the HTML content
+            html_content = base64.urlsafe_b64decode(html_part['body']['data']).decode('utf-8')
+            
+            # Extract links from the HTML content
+            links = parser.extract_newsletter_links(html_content)
+            
+            print("Extracted links:")
+            for link in links:
+                print(link)
         else:
-          print("Body element not found.")
+            print("No HTML content found in the email.")
+
+
 
   except HttpError as error:
       print(f"An error occurred: {error}")
