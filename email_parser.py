@@ -29,14 +29,14 @@ def extract_newsletter_links(email_content):
             # Check if the decoded URL starts with any of the excluded prefixes
             if not any(decoded_url.lower().startswith(prefix) for prefix in excluded_prefixes):
                 all_links.append(decoded_url)
-            else:
-                print(f"Excluded link: {decoded_url}")  # Debug print
+            # else:
+            #     print(f"Excluded link: {decoded_url}")  # Debug print
 
     # Remove duplicates
     unique_links = list(set(all_links))
     
-    print(f"Total links found: {len(all_links)}")  # Debug print
-    print(f"Unique links after filtering: {len(unique_links)}")  # Debug print
+    #print(f"Total links found: {len(all_links)}")  # Debug print
+    #print(f"Unique links after filtering: {len(unique_links)}")  # Debug print
     
     return unique_links
 

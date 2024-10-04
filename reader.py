@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pyttsx3
 import base64
-import parser
+import email_parser
 
 
     
@@ -61,13 +61,14 @@ def main():
             html_content = base64.urlsafe_b64decode(html_part['body']['data']).decode('utf-8')
             
             # Extract links from the HTML content
-            links = parser.extract_newsletter_links(html_content)
+            links = email_parser.extract_newsletter_links(html_content)
             
-            print("Extracted links:")
-            for link in links:
-                print(link)
+            # print("Extracted links:")
+            # for link in links:
+            #     print(link)
+            return links
         else:
-            print("No HTML content found in the email.")
+            return "No HTML content found in the email."
 
 
 
