@@ -3,8 +3,8 @@ import google.generativeai as genai
 import reader
 import util
 import crud 
-import json
-import requests
+
+
 
 
 
@@ -16,18 +16,17 @@ genai.configure(api_key=os.environ["api-key"])
 model = genai.GenerativeModel("gemini-1.5-flash")
 text = reader.main()
 
-#response = model.generate_content(f"summarise the following text {text}")
-#util.read_out_loud(response.text)
-#print(response.text)
 
-#crud.update(text)
-
-#json_data = crud.select_links()
+crud.update_Emails(text)
 
 
+links = crud.select_links()
 
 
-print(crud.select_links() )
+for x in  links[0:10]:
+    response = model.generate_content(f"summarise the following text: {util.extract_text(x)}")
+    crud.update_Summary(response.text)
     
+        
 
 
