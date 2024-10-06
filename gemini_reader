@@ -2,6 +2,9 @@ import os
 import google.generativeai as genai
 import reader
 import util
+import crud 
+import json
+import requests
 
 
 
@@ -16,4 +19,15 @@ text = reader.main()
 #response = model.generate_content(f"summarise the following text {text}")
 #util.read_out_loud(response.text)
 #print(response.text)
-print(text)
+
+#crud.update(text)
+
+#json_data = crud.select_links()
+
+
+
+
+print(crud.select_links() )
+    
+
+

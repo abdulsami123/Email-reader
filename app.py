@@ -1,2 +1,2 @@
-import gemini-reader
+import gemini_reader
 
