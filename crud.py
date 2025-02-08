@@ -9,7 +9,7 @@ import json
 utc_now = datetime.now(pytz.utc)
 
 # Format the timestamp with time zone
-current_time = utc_now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
+current_time = utc_now.isoformat()
 
 
 load_dotenv() 
@@ -28,13 +28,21 @@ def update_Emails(x):
     .execute()
                 )
     
-def update_Summary(x):
+def update_Summary(x,y,z):
     response = (
     supabase.table("Summaries")
-    .insert({ "created_at": current_time , "Summary" : x , "vendor" : "TLDR" })
+    .insert({ "created_at": current_time , "Summary" : x , "vendor" : "TLDR" , "link":y , "title":z})
     .execute()
                 ) 
     
+def read_Emails():
+    response = supabase.table("Summaries") \
+    .select("Summary") \
+    .order("created_at", desc=True) \
+    .limit(10) \
+    .execute()
+    
+    return response.data
 
 
 def select_links():

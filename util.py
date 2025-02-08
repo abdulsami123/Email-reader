@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import os
 from goose3 import Goose
+import requests
+from bs4 import BeautifulSoup
 
 def read_out_loud(text):
     engine = pyttsx3.init()
@@ -29,6 +31,16 @@ def extract_text(article_url):
     g = Goose()
     article = g.extract(article_url)
     return article.cleaned_text, article.title
+
+def extract_title(x):
+    url = x
+
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    title = soup.find("title").text
+    return title
+
 
 
         

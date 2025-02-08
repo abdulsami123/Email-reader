@@ -1,0 +1,34 @@
+import os
+import google.generativeai as genai
+import reader
+import util
+import crud 
+
+
+
+
+#This loads the Gemini-API key
+util.load_api_key("gemini-api-key.json")
+genai.configure(api_key=os.environ["api-key"])
+
+#This selects the Gemini model
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+#Here we use the reader file to extract the link in the emails
+text = reader.main()
+
+#Here we are dumping the emails in the 'Emails' table
+crud.update_Emails(text)
+
+#Here we are querying the links from the database
+links = crud.select_links()
+
+#Here we are extracting the text from the links in the Db & performing summarization inference
+for x in  links[0:10]:
+    response = model.generate_content(f"summarise the following text: {util.extract_text(x)}")
+    title = util.extract_title(x)
+    crud.update_Summary(response.text,x,title)
+    
+
+
+
