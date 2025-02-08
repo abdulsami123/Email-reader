@@ -14,11 +14,12 @@ genai.configure(api_key=os.environ["api-key"])
 #This selects the Gemini model
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-#Here we use the reader file to extract the link in the emails
-text = reader.main()
+#Here we use the reader file to extract the links and their timestamps in the emails
+text = reader.main()['links']
+timestamps = reader.main()['timestamp']
 
 #Here we are dumping the emails in the 'Emails' table
-crud.update_Emails(text)
+crud.update_Emails(text,timestamps)
 
 #Here we are querying the links from the database
 links = crud.select_links()

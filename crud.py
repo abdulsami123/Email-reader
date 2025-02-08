@@ -21,17 +21,17 @@ key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 
-def update_Emails(x):
+def update_Emails(links,email_ts):
     response = (
     supabase.table("Emails")
-    .insert({ "created_at": current_time , "links" : x , "vendor" : "TLDR" })
+    .insert({ "created_at": current_time , "links" : links , "vendor" : "TLDR" ,"email_reception_time":email_ts})
     .execute()
                 )
     
-def update_Summary(x,y,z):
+def update_Summary(summary,link,title):
     response = (
     supabase.table("Summaries")
-    .insert({ "created_at": current_time , "Summary" : x , "vendor" : "TLDR" , "link":y , "title":z})
+    .insert({ "created_at": current_time , "Summary" : summary , "vendor" : "TLDR" , "link":link , "title":title})
     .execute()
                 ) 
     

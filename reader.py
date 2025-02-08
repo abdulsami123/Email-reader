@@ -8,6 +8,7 @@ from googleapiclient.errors import HttpError
 import pyttsx3
 import base64
 import email_parser
+from datetime import datetime
 
 
     
@@ -37,10 +38,10 @@ def main():
     with open("token.json", "w") as token:
       token.write(creds.to_json())
 
-  
+  #, q="TLDR <dan@tldrnewsletter.com>" 
   try:
     service = build("gmail", "v1", credentials=creds)
-    response = service.users().messages().list(userId="me", q="TLDR <dan@tldrnewsletter.com>").execute()
+    response = service.users().messages().list(userId="me", q="from:dan@tldrnewsletter.com").execute()
     messages = response.get("messages", [])
     if not messages:
         print("No messages found.")
@@ -55,7 +56,15 @@ def main():
                 if part['mimeType'] == 'text/html':
                     html_part = part
                     break
-
+        # Extract timestamp (in milliseconds since epoch)
+        email_timestamp = int(latest_message['internalDate'])
+    
+        # Convert to datetime object (UTC)
+        date_time = datetime.datetime.utcfromtimestamp(email_timestamp / 1000)
+    
+        # Format as ISO string (optional)
+        formatted_time = date_time.isoformat()
+        
         if html_part:
             # Decode the HTML content
             html_content = base64.urlsafe_b64decode(html_part['body']['data']).decode('utf-8')
@@ -66,7 +75,7 @@ def main():
             # print("Extracted links:")
             # for link in links:
             #     print(link)
-            return links
+            return {'links':links, 'timestamp':formatted_time}
         else:
             return "No HTML content found in the email."
 
