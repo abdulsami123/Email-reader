@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 import pyttsx3
 import base64
 import email_parser
-from datetime import datetime
+from datetime import datetime,timezone
 
 
     
@@ -56,11 +56,12 @@ def main():
                 if part['mimeType'] == 'text/html':
                     html_part = part
                     break
+        
         # Extract timestamp (in milliseconds since epoch)
         email_timestamp = int(latest_message['internalDate'])
     
         # Convert to datetime object (UTC)
-        date_time = datetime.datetime.utcfromtimestamp(email_timestamp / 1000)
+        date_time = datetime.fromtimestamp(email_timestamp / 1000,tz=timezone.utc)
     
         # Format as ISO string (optional)
         formatted_time = date_time.isoformat()
@@ -72,8 +73,7 @@ def main():
             # Extract links from the HTML content
             links = email_parser.extract_newsletter_links(html_content)
             
-            # print("Extracted links:")
-            # for link in links:
+
             #     print(link)
             return {'links':links, 'timestamp':formatted_time}
         else:

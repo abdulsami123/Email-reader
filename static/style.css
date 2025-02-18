@@ -6,6 +6,7 @@ body {
     background-color: #f9f9f9;
 }
 .summary-container {
+    position: relative;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -13,6 +14,15 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* Create a container for the action buttons */
+.summary-container > :last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+  }
+
 .summary-container h2 {
     margin-top: 0;
     color: #333;
@@ -21,10 +31,13 @@ body {
     color: #666;
 }
 .read-more {
+    display: inline-block;
+    margin-top: 15px;
     color: #007BFF;
     text-decoration: none;
     font-weight: bold;
 }
+
 .read-more:hover {
     text-decoration: underline;
 }
@@ -43,3 +56,44 @@ body {
 .pagination button:hover {
     background-color: #f1f1f1;
 }
+
+
+/* General button styling */
+.bookmark-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 8px; /* Space between icon and text */
+    background-color: white; /* Button background color */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    font-family: Arial, sans-serif; /* Font style */
+    font-size: 16px; /* Font size */
+    color: black; /* Text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  /* Bookmark icon styling */
+  .bookmark-icon {
+    width: 12px;
+    height: 16px;
+    background-color: red; /* Red color for the bookmark icon */
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%); /* Creates a bookmark shape */
+  }
+  
+  /* Hover effect for the button */
+  .bookmark-btn:hover {
+    background-color: #f9f9f9; /* Slightly lighter background on hover */
+  }
+  
+  /* Optional: Add focus effect for accessibility */
+  .bookmark-btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
+  }
+  
+  

@@ -2,8 +2,14 @@
 <div class="summary-container">
     <h2>{{ item.title }}</h2>
     <p>{{ item.Summary }}</p>
-    <a href="{{item.link}}" class="read-more">Read More</a>
-</div>
+    <div> <!-- New wrapper div -->
+      <a href="{{item.link}}" class="read-more">Read More</a>
+      <button class="bookmark-btn">
+        <span class="bookmark-icon"></span>
+        Bookmark
+      </button>
+    </div>
+  </div>
 
 {% endfor %}
 

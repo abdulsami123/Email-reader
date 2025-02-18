@@ -38,8 +38,18 @@ def extract_title(x):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
 
-    title = soup.find("title").text
-    return title
+    try:
+        # Attempt to find the <title> tag
+        title_tag = soup.find("title")
+        if title_tag is not None:  # Check if the <title> tag was found
+            return title_tag.text
+        else:
+            return "Title not found"
+    except Exception as e:  # Catch any unexpected errors
+        print(f"An unexpected error occurred: {e}")
+        return "Couldn't find it"
+
+
 
 
 
