@@ -2,6 +2,7 @@ from fasthtml.common import *
 import os
 import subprocess
 import time
+import threading
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
@@ -54,7 +55,6 @@ def read_Emails(page: int):
 def display_dictionary_list(data_list, current_page, has_next):
     buttons = []
     
-    # Previous button
     if current_page > 0:
         prev_page = current_page - 1
         buttons.append(
@@ -63,7 +63,6 @@ def display_dictionary_list(data_list, current_page, has_next):
               style="margin-right: 0.5rem;")
         )
     
-    # Next button
     if has_next:
         next_page = current_page + 1
         buttons.append(
@@ -72,17 +71,16 @@ def display_dictionary_list(data_list, current_page, has_next):
               style="margin-left: 0.5rem;")
         )
     
-    # Header with title and refresh button
+    # Modified button to use onclick directly
     header = Div(
         H1("Summaries", cls="heading", style="flex-grow: 1;"),
         Button("🔄 Refresh", 
-               onclick="startRefresh()",
+               onclick="startRefresh()",  # Direct onclick handler
                cls="contrast outline",
                style="margin-left: auto;"),
         style="display: flex; align-items: center; margin-bottom: 2rem;"
     )
     
-    # Footer with navigation buttons
     footer = []
     if buttons:
         footer = [
@@ -107,24 +105,39 @@ def display_dictionary_list(data_list, current_page, has_next):
         children=[
             Script("""
                 let checkInterval;
-                
+
                 function startRefresh() {
+                    console.log('startRefresh called');
                     const btn = document.querySelector('button[onclick="startRefresh()"]');
+                    
+                    if (!btn) {
+                        console.error('Refresh button not found!');
+                        return;
+                    }
+                    
                     btn.innerHTML = '⏳ Processing...';
                     btn.disabled = true;
-                    
-                    fetch('/refresh', { method: 'POST' })
-                        .then(response => {
-                            if (!response.ok) throw new Error('Start failed');
-                            checkInterval = setInterval(checkRefreshStatus, 2000);
-                        })
-                        .catch(handleRefreshError);
+
+                    fetch('/refresh', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Refresh response:', response);
+                        if (!response.ok) throw new Error('Start failed');
+                        checkInterval = setInterval(checkRefreshStatus, 2000);
+                    })
+                    .catch(handleRefreshError);
                 }
 
                 function checkRefreshStatus() {
+                    console.log('Checking refresh status...');
                     fetch('/refresh-status')
                         .then(response => response.json())
                         .then(data => {
+                            console.log('Status data:', data);
                             if (!data.running && data.completed) {
                                 clearInterval(checkInterval);
                                 window.location.reload();
@@ -136,12 +149,14 @@ def display_dictionary_list(data_list, current_page, has_next):
                 }
 
                 function handleRefreshError(error) {
+                    console.error('Refresh error occurred:', error);
                     clearInterval(checkInterval);
                     const btn = document.querySelector('button[onclick="startRefresh()"]');
-                    btn.innerHTML = '🔄 Refresh';
-                    btn.disabled = false;
+                    if (btn) {
+                        btn.innerHTML = '🔄 Refresh';
+                        btn.disabled = false;
+                    }
                     alert(error.message);
-                    console.error('Refresh error:', error);
                 }
             """)
         ]
