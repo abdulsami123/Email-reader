@@ -31,13 +31,13 @@ def update_Emails(links,email_ts):
 def update_Summary(summary,link,title):
     response = (
     supabase.table("Summaries")
-    .insert({ "created_at": current_time , "Summary" : summary , "vendor" : "TLDR" , "link":link , "title":title})
+    .insert({ "created_at": current_time , "summary" : summary , "vendor" : "TLDR" , "link":link , "title":title})
     .execute()
                 ) 
     
 def read_Emails():
     response = supabase.table("Summaries") \
-    .select("Summary") \
+    .select("summary") \
     .order("created_at", desc=True) \
     .limit(10) \
     .execute()

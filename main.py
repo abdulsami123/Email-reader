@@ -1,9 +1,12 @@
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request , HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from supabase import create_client, Client
+from schemas import Summaries 
+from typing import List
 import os
+from pydantic import ValidationError
 
 app = FastAPI()
 
@@ -21,7 +24,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/items", response_class=HTMLResponse)
+@app.get("/items", response_class=HTMLResponse, response_model=List[Summaries])
 async def get_items(
     request: Request,
     offset: int = Query(0),
@@ -32,6 +35,14 @@ async def get_items(
     query = supabase.table("Summaries").select("*").order("id", desc=True).range(start,end)
     data = query.execute().data
 
+    print(data)
+    # Validate response data against Pydantic model
+    try:
+        validated_data = [Summaries(**item) for item in data]
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
+
+    
     # Check for next page (more efficient than counting all rows)
     next_page_query = supabase.table("Summaries").select("*").order("id", desc=True).range(end + 1, end + 1) #Check if there is at least one more record after the current page
     next_page_data = next_page_query.execute().data
@@ -41,7 +52,7 @@ async def get_items(
         "items.html",
         {
             "request": request,
-            "items": data,
+            "items": validated_data,
             "offset": offset,
             "limit": limit,
             "has_next_page": has_next_page,  # Pass this to the template
