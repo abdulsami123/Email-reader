@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 import pyttsx3
 import base64
 import email_parser
-from datetime import datetime,timezone
+from datetime import datetime
 
 
     
@@ -57,14 +57,7 @@ def main():
                     html_part = part
                     break
         
-        # Extract timestamp (in milliseconds since epoch)
-        email_timestamp = int(latest_message['internalDate'])
-    
-        # Convert to datetime object (UTC)
-        date_time = datetime.fromtimestamp(email_timestamp / 1000,tz=timezone.utc)
-    
-        # Format as ISO string (optional)
-        formatted_time = date_time.isoformat()
+
         
         if html_part:
             # Decode the HTML content
@@ -75,7 +68,7 @@ def main():
             
 
             #     print(link)
-            return {'links':links, 'timestamp':formatted_time}
+            return {'links':links, 'timestamp':datetime.datetime.now()}
         else:
             return "No HTML content found in the email."
 
