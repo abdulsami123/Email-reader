@@ -3,15 +3,26 @@
     <h2>{{ item.title }}</h2>
     <p>{{ item.summary }}</p>
     <div> <!-- New wrapper div -->
-      <a href="{{item.link}}" class="read-more">Read More</a>
-      <button class="bookmark-btn">
-        <span class="bookmark-icon"></span>
-        Bookmark
-      </button>
+      <a href="{{ item.link }}" class="read-more">Read More</a>
+      <button class="bookmark-btn"
+      hx-post="/bookmarks"
+      hx-headers='{"Content-Type": "application/json"}'
+      hx-ext="json-enc"
+      hx-vals='{
+        "title": "{{ item.title }}",
+        "summary": "{{ item.summary }}",
+        "link": "{{ item.link }}",
+        "vendor": "{{ item.vendor }}"
+      }'>
+    <span class="bookmark-icon"></span>
+    Bookmark
+  </button>
+  
     </div>
-  </div>
-
+</div> 
 {% endfor %}
+
+
 
 <div class="pagination">
     <button hx-get="/items?offset={{ offset - limit }}&limit={{ limit }}" 
