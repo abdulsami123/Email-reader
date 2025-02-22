@@ -47,7 +47,7 @@ def extract_title(x):
             return "Title not found"
     except Exception as e:  # Catch any unexpected errors
         print(f"An unexpected error occurred: {e}")
-        return "Couldn't find it"
+        return "Title Unknown"
 
 
 

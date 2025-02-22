@@ -62,7 +62,6 @@ async def get_items(
 
 @app.post("/bookmarks")
 async def post_bookmarks(item:Bookmarks , request:Request ):
-    print("Received:", item)  # Debugging
     item = item.model_dump()
     try:
         # Insert the item into the Bookmarks table
