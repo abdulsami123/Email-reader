@@ -63,6 +63,7 @@ async def get_items(
 @app.post("/bookmarks")
 async def post_bookmarks(item:Bookmarks , request:Request ):
     item = item.model_dump()
+    
     try:
         # Insert the item into the Bookmarks table
         response = supabase.table("Bookmarks").insert(item).execute()
@@ -75,3 +76,17 @@ async def post_bookmarks(item:Bookmarks , request:Request ):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/bookmarks-page")
+async def get_bookmarks( request:Request):
+
+    query = supabase.table("Bookmarks").select("*").order("id", desc=True)
+    data = query.execute().data
+    
+    return templates.TemplateResponse(
+        "bookmarks.html",
+        {
+            "request": request,
+            "items": data,
+        }
+    )

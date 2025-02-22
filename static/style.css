@@ -59,7 +59,7 @@ body {
 
 
 /* General button styling */
-.bookmark-btn {
+.bookmarking-btn {
     position: absolute;
     right: 20px;
     bottom: 20px;
@@ -78,7 +78,7 @@ body {
   }
   
   /* Bookmark icon styling */
-  .bookmark-icon {
+  .bookmarking-icon {
     width: 12px;
     height: 16px;
     background-color: red; /* Red color for the bookmark icon */
@@ -86,14 +86,29 @@ body {
   }
   
   /* Hover effect for the button */
-  .bookmark-btn:hover {
+  .bookmarking-btn:hover {
     background-color: #f9f9f9; /* Slightly lighter background on hover */
   }
   
   /* Optional: Add focus effect for accessibility */
-  .bookmark-btn:focus {
+  .bookmarking-btn:focus {
     outline: none;
     box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
   }
   
-  
+  .bookmark-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: blue;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.bookmark-button:hover {
+    background-color: darkblue;
+}
