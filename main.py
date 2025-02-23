@@ -83,21 +83,22 @@ async def get_bookmarks( request:Request,offset: int = Query(0), limit: int = Qu
 
     start = offset
     end = offset + limit -1
-    query = supabase.table("Summaries").select("*").order("id", desc=True).range(start,end)
+    query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(start,end)
     data = query.execute().data
 
     # Validate response data against Pydantic model
     try:
-        validated_data = [Summaries(**item) for item in data]
+        validated_data = [Bookmarks(**item) for item in data]
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors())
 
     
     # Check for next page (more efficient than counting all rows)
-    next_page_query = supabase.table("Summaries").select("*").order("id", desc=True).range(end + 1, end + 1) #Check if there is at least one more record after the current page
+    next_page_query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(end + 1, end + 1) #Check if there is at least one more record after the current page
     next_page_data = next_page_query.execute().data
     has_next_page = len(next_page_data) > 0 #If there is at least one record then there is a next page
 
+    print(next_page_data)
     return templates.TemplateResponse(
         "bookmarks.html",
         {
