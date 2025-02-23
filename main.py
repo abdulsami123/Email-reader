@@ -20,6 +20,7 @@ key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/artifacts", StaticFiles(directory="artifacts"), name="artifacts")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):

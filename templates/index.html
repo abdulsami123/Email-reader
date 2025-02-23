@@ -9,8 +9,12 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Summaries</h1>
-    <button><a href="/bookmarks-page" class="bookmark-button">Bookmarks</a></button>
+    <div class="header-container">
+        <h1>Summaries</h1>
+        <button class="bookmark-button" onclick="window.location.href='/bookmarks-page'">
+            <img src="artifacts/agenda.png" alt="Bookmarks" class="bookmark-icon-img">
+        </button>
+    </div>
     <div hx-get="/items?offset=0&limit=5" 
          hx-trigger="load" 
          hx-swap="innerHTML"
