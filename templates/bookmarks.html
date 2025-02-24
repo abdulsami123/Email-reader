@@ -1,23 +1,16 @@
-<link rel="stylesheet" href="/static/style.css">
-<h1> Bookmarks </h1>
-{% for item in items %}
-<div class="summary-container">
-    <h2>{{ item.title }}</h2>
-    <p>{{ item.summary }}</p>
-    <div>
-      <a href="{{ item.link }}" class="read-more">Read More</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarks</title>
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Bookmarks</h1>
+    <div id="content-wrapper">
+        {% include "bookmarks_content.html" %}
     </div>
-</div>
-{% endfor %}
-
-<div class="pagination">
-  <button hx-get="/bookmarks-page?offset={{ offset - limit }}&limit={{ limit }}" 
-          hx-target="#items-container"  hx-swap="innerHTML"           {% if offset == 0 %}disabled{% endif %}>
-      Previous Page
-  </button>
-  <button hx-get="/bookmarks-page?offset={{ offset + limit }}&limit={{ limit }}" 
-          hx-target="#items-container"  hx-swap="innerHTML"           {% if not has_next_page %}disabled{% endif %}>
-      Next Page
-  </button>
-</div>
-</div>
+</body>
+</html>

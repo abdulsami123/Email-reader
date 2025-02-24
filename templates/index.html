@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summaries</title>
+    <script>
+        document.body.addEventListener('htmx:log:all', function(evt) {
+          console.log(evt.detail);
+        });
+        </script>
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <link rel="stylesheet" href="/static/style.css">
@@ -11,7 +16,7 @@
 <body>
     <div class="header-container">
         <h1>Summaries</h1>
-        <button class="bookmark-button" onclick="window.location.href='/bookmarks-page?offset=0&limit=5'">
+        <button  class="bookmark-button" onclick="window.location.href='/bookmarks-page?offset=0&limit=3'">
             <img src="artifacts/agenda.png" alt="Bookmarks" class="bookmark-icon-img">
         </button>
     </div>

@@ -79,33 +79,38 @@ async def post_bookmarks(item:Bookmarks , request:Request ):
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/bookmarks-page")
-async def get_bookmarks( request:Request,offset: int = Query(0), limit: int = Query(10)):
-
-    start = offset
-    end = offset + limit -1
-    query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(start,end)
-    data = query.execute().data
-
-    # Validate response data against Pydantic model
+async def get_bookmarks(request: Request, offset: int = Query(0), limit: int = Query(10)):
     try:
+        start = offset
+        end = offset + limit - 1
+        
+        # Fetch main data
+        query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(start, end)
+        data = query.execute().data
+        
+        # Validate data
         validated_data = [Bookmarks(**item) for item in data]
-    except ValidationError as e:
-        raise HTTPException(status_code=422, detail=e.errors())
-
-    
-    # Check for next page (more efficient than counting all rows)
-    next_page_query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(end + 1, end + 1) #Check if there is at least one more record after the current page
-    next_page_data = next_page_query.execute().data
-    has_next_page = len(next_page_data) > 0 #If there is at least one record then there is a next page
-
-    print(next_page_data)
-    return templates.TemplateResponse(
-        "bookmarks.html",
-        {
-            "request": request,
-            "items": validated_data,
-            "offset": offset,
-            "limit": limit,
-            "has_next_page": has_next_page,  # Pass this to the template
-        }
-    )
+        
+        # Check for next page
+        next_page_query = supabase.table("Bookmarks").select("*").order("id", desc=True).range(end + 1, end + 1)
+        next_page_data = next_page_query.execute().data
+        has_next_page = len(next_page_data) > 0
+        
+        # Determine if this is an HTMX request
+        is_htmx = request.headers.get("HX-Request") == "true"
+        template_name = "bookmarks_content.html" if is_htmx else "bookmarks.html"
+        
+        return templates.TemplateResponse(
+            template_name,
+            {
+                "request": request,
+                "items": validated_data,
+                "offset": offset,
+                "limit": limit,
+                "has_next_page": has_next_page,
+            }
+        )
+        
+    except Exception as e:
+        print(f"Error in get_bookmarks: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
