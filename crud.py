@@ -19,14 +19,14 @@ supabase: Client = create_client(url, key)
 def update_Emails(links,email_ts):
     response = (
     supabase.table("Emails")
-    .insert({ "created_at": current_time , "links" : links , "vendor" : "TLDR" })
+    .insert({  "links" : links , "vendor" : "TLDR" })
     .execute()
                 )
     
 def update_Summary(summary,link,title):
     response = (
     supabase.table("Summaries")
-    .insert({ "created_at": current_time , "summary" : summary , "vendor" : "TLDR" , "link":link , "title":title})
+    .insert({ "summary" : summary , "vendor" : "TLDR" , "link":link , "title":title})
     .execute()
                 ) 
     
