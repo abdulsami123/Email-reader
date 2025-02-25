@@ -9,9 +9,11 @@ import os
 from pydantic import ValidationError
 from datetime import datetime
 
+#App startup
 app = FastAPI()
 
-# Templates configuration
+
+#This is to indicate to the Templating engine where HTML template is
 templates = Jinja2Templates(directory="templates")
 
 # Supabase configuration
@@ -19,6 +21,7 @@ url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
+#Each Folder needs to be 'mounted' to make FastAPI aware of its existence in the directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/artifacts", StaticFiles(directory="artifacts"), name="artifacts")
 
@@ -60,7 +63,7 @@ async def get_items(
         }
     )
 
-
+# This is to Bookmark posts
 @app.post("/bookmarks")
 async def post_bookmarks(item:Bookmarks , request:Request ):
     item = item.model_dump()
@@ -77,7 +80,8 @@ async def post_bookmarks(item:Bookmarks , request:Request ):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+# This is to render the Bookmarks button  
 @app.get("/bookmarks-page")
 async def get_bookmarks(request: Request, offset: int = Query(0), limit: int = Query(10)):
     try:
@@ -97,6 +101,8 @@ async def get_bookmarks(request: Request, offset: int = Query(0), limit: int = Q
         has_next_page = len(next_page_data) > 0
         
         # Determine if this is an HTMX request
+        # this is important since the first request is a result of redirection and not a GET request    
+        #it renders Bookmarks.html for redirects and then progressively renders using bookmarks_content.html using %include%
         is_htmx = request.headers.get("HX-Request") == "true"
         template_name = "bookmarks_content.html" if is_htmx else "bookmarks.html"
         
