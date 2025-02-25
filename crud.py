@@ -5,11 +5,6 @@ from datetime import datetime
 import pytz
 import json
 
-# Get current time in UTC
-utc_now = datetime.now(pytz.utc)
-
-# Format the timestamp with time zone
-current_time = utc_now.isoformat()
 
 
 load_dotenv() 
@@ -24,7 +19,7 @@ supabase: Client = create_client(url, key)
 def update_Emails(links,email_ts):
     response = (
     supabase.table("Emails")
-    .insert({ "created_at": current_time , "links" : links , "vendor" : "TLDR" ,"email_reception_time":email_ts})
+    .insert({ "created_at": current_time , "links" : links , "vendor" : "TLDR" })
     .execute()
                 )
     

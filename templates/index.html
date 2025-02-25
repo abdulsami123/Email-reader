@@ -12,12 +12,13 @@
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/x-icon" href="/artifacts/summary-icon.jpg">
 </head>
 <body>
     <div class="header-container">
         <h1>Summaries</h1>
         <button  class="bookmark-button" onclick="window.location.href='/bookmarks-page?offset=0&limit=3'">
-            <img src="artifacts/agenda.png" alt="Bookmarks" class="bookmark-icon-img">
+            <img src="artifacts/bookmarks-icon.png" alt="Bookmarks" class="bookmark-icon-img">
         </button>
     </div>
     <div hx-get="/items?offset=0&limit=5" 
