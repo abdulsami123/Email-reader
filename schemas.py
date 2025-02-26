@@ -15,5 +15,6 @@ class Bookmarks(BaseModel):
     summary: Optional[str] = Field(None)
     link: Optional[str] = Field(None)
     vendor: Optional[str] = Field(None)
+    summary_id:int 
 
 
