@@ -108,8 +108,8 @@ body {
     border: none;
     cursor: pointer;
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: 2px;
+    height: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,4 +124,23 @@ body {
 .bookmark-button:hover {
     opacity: 0.8;
 }
+
+.button-container {
+    display: flex; /* Align items in a row */
+    justify-content: flex-end; /* Align items to the right */
+    gap: 10px; /* Add a small gap between buttons */
+}
+
+.button-container button {
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.button-container button:hover {
+    background-color: #f1f1f1; /* Optional hover effect */
+}
+
   

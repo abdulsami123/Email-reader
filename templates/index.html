@@ -17,9 +17,14 @@
 <body>
     <div class="header-container">
         <h1>Summaries</h1>
+        <div class="button-container">
         <button  class="bookmark-button" onclick="window.location.href='/bookmarks-page?offset=0&limit=3'">
             <img src="artifacts/bookmarks-icon.png" alt="Bookmarks" class="bookmark-icon-img">
         </button>
+        <button  class="bookmark-button" onclick="window.location.href='/bookmarks-page?offset=0&limit=3'">
+            <img src="artifacts/refresh-icon.png" alt="Bookmarks" class="bookmark-icon-img">
+        </button>
+        </div>
     </div>
     <div hx-get="/items?offset=0&limit=5" 
          hx-trigger="load" 
