@@ -24,10 +24,16 @@ crud.update_Emails(text,timestamps)
 links = crud.select_links()
 
 #Here we are extracting the text from the links in the Db & performing summarization inference
-for x in  links[0:10]:
-    response = model.generate_content(f"summarise the following text: {util.extract_text(x)}")
-    title = util.extract_title(x)
-    crud.update_Summary(response.text,x,title)
+for x in links[0:10]:
+    text = util.extract_text(x)  # Get text first
+    if not text:  # Skip if text is None or empty
+        continue
+    
+    title = util.extract_title(x)  # Only fetch title if text is valid
+    response = model.generate_content(f"Summarize: {text}")
+    crud.update_Summary(response.text, x, title)
+        
+
     
 
 
