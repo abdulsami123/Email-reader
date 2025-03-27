@@ -68,7 +68,7 @@ def main():
             
 
             #     print(link)
-            return {'links':links, 'timestamp':datetime.datetime.now()}
+            return {'links':links, 'timestamp':datetime.now()}
         else:
             return "No HTML content found in the email."
 

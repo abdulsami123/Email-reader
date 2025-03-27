@@ -8,8 +8,7 @@ import crud
 
 
 #This loads the Gemini-API key
-util.load_api_key("gemini-api-key.json")
-genai.configure(api_key=os.environ["api-key"])
+genai.configure(api_key=os.environ.get("GEMINI_API"))
 
 #This selects the Gemini model
 model = genai.GenerativeModel("gemini-1.5-flash")
