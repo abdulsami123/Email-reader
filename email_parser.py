@@ -2,9 +2,6 @@ import re
 import urllib.parse
 from bs4 import BeautifulSoup
 
-import re
-import urllib.parse
-from bs4 import BeautifulSoup
 
 def extract_newsletter_links(email_content):
     # Parse the HTML content
